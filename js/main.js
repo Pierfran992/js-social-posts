@@ -82,18 +82,33 @@ posts.forEach(elem => {
                     <div class="post__footer">
                         <div class="likes js-likes">
                             <div class="likes__cta">
-                                <a class="like-button  js-like-button" href="" data-postid="${elem.id}">
+                                <a class="like-button  js-like-button" data-postid="${elem.id}">
                                     <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                                     <span class="like-button__label">Mi Piace</span>
                                 </a>
                             </div>
                             <div class="likes__counter">
-                                Piace a <b id="like-counter-1" class="js-likes-counter">${elem.likes}</b> persone
+                                Piace a <b id="like-counter-${elem.id}" class="js-likes-counter">${elem.likes}</b> persone
                             </div>
                         </div> 
                     </div>            
                 </div>`
 
     ctnPost.innerHTML += post;
+    
 });
 
+// richiamo il pulsante del like
+const buttonLike = document.querySelectorAll("a.js-like-button");
+
+// creo l'evento al click sul pulsante del like
+buttonLike.forEach(btn => {
+    btn.addEventListener('click', event => 
+        {
+            btn.classList.toggle("like__selected");
+            // richiamo il counter dei like per poi incrementarlo quando si preme su like
+            let likeCounter = document.querySelectorAll("js-likes-counter").value;
+            likeCounter++;
+            console.log(likeCounter);            
+        })
+});
