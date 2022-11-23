@@ -57,6 +57,9 @@ const posts = [
 ];
 console.log(posts);
 
+// array vuoto in cui inserirò i post che mi piacciono
+let myLikePost = [];
+
 // richiamo il contenitore in cui inserire i post generati
 const ctnPost = document.getElementById("container");
 
@@ -82,7 +85,7 @@ posts.forEach(elem => {
                     <div class="post__footer">
                         <div class="likes js-likes">
                             <div class="likes__cta">
-                                <a class="like-button  js-like-button" data-postid="${elem.id}">
+                                <a class="like-button  js-like-button" id="like-${elem.id}" data-postid="${elem.id}" onclick="likePost(${elem.id})">
                                     <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                                     <span class="like-button__label">Mi Piace</span>
                                 </a>
@@ -94,21 +97,41 @@ posts.forEach(elem => {
                     </div>            
                 </div>`
 
-    ctnPost.innerHTML += post;
-    
+    ctnPost.innerHTML += post; 
 });
 
-// richiamo il pulsante del like
-const buttonLike = document.querySelectorAll("a.js-like-button");
 
-// creo l'evento al click sul pulsante del like
-buttonLike.forEach(btn => {
-    btn.addEventListener('click', event => 
-        {
-            btn.classList.toggle("like__selected");
-            // richiamo il counter dei like per poi incrementarlo quando si preme su like
-            let likeCounter = document.querySelectorAll("js-likes-counter").value;
-            likeCounter++;
-            console.log(likeCounter);            
-        })
-});
+// creo la funzione che mi viene richiamata dal onclick inserita nel tag a
+function likePost(postId) {
+
+    // richiamo il counter in cui inserire il nuovo valore dei like 
+    let counter = document.getElementById(`like-counter-${postId}`);
+
+    // richiamo il tag a per farlo colorare quando si seleziona il pulsante like
+    let like = document.getElementById(`like-${postId}`);
+
+    if (myLikePost.filter(elem => postId == elem).length > 0) {
+        myLikePost = myLikePost.filter(elem => postId != elem);
+        posts.filter(post => {
+            if (post.id == postId) {
+                post.likes--;
+                console.log(post.likes);
+                counter.innerHTML = post.likes;
+            }
+        });
+
+    } else {
+        myLikePost.push(postId);
+        posts.filter(post => {
+            if (post.id == postId) {
+                post.likes++;
+                console.log(post.likes);
+                counter.innerHTML = post.likes;
+            }
+        });
+    }
+
+    console.log(myLikePost);
+
+    like.classList.toggle("like__selected");
+};
